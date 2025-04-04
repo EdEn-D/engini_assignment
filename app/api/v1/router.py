@@ -33,16 +33,12 @@ async def generate_diagram(request: DiagramRequest):
     logger.info(f"Received diagram generation request: {request.description}")
 
     try:
-        # For development, we will use a temporary directory for the output
-        output_dir = "temp"
-        os.makedirs(output_dir, exist_ok=True)
-
         # Generate diagram structure
-        diagram_dict = diagram_agent.generate_diagram_structure(request.description)
+        diagram_dict = await diagram_agent.generate_diagram_structure(request.description)
         logger.info(f"Generated diagram structure: {diagram_dict}")
 
         # Generate the actual diagram image
-        diagram_path = parse_diagram_schema(diagram_dict, output_dir)
+        diagram_path = await parse_diagram_schema(diagram_dict, os.getenv("TEMP_DIR"))
         logger.info(f"Generated diagram at: {diagram_path}")
 
         # Return the image file

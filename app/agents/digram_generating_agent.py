@@ -33,7 +33,7 @@ class DiagramGeneratingAgent:
         llm = ChatOpenAI(model="gpt-4o", temperature=0)
         self.client = llm.with_structured_output(DiagramSchema)
 
-    def generate_diagram_structure(self, diagram_description: str) -> Dict[str, Any]:
+    async def generate_diagram_structure(self, diagram_description: str) -> Dict[str, Any]:
         """
         Generate a diagram based on a natural language description.
 
@@ -57,11 +57,11 @@ class DiagramGeneratingAgent:
 
         try:
             logger.info("Attempting diagram generation")
-            response = chain.invoke(diagram_description)
+            response = await chain.ainvoke(diagram_description)
             diagram_dict = response.model_dump()
             logger.info("Diagram generation successful")
             return diagram_dict
-        
+
         except OpenAIError as e:
             logger.error(f"OpenAI API error: {str(e)}")
             raise DiagramGenerationError(

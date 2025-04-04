@@ -1,5 +1,6 @@
 from typing import Dict, Any, Optional
 import os
+import asyncio
 from diagrams import Diagram, Cluster
 
 # Import all node types at import time
@@ -32,10 +33,10 @@ NODE_CLASSES = {
 }
 
 
-def parse_diagram_schema(
+async def parse_diagram_schema(
     schema: Dict[str, Any], output_dir: Optional[str] = None
 ) -> str:
-    """Parse a schema and create a diagram with nodes and edges.
+    """Parse a schema and create a diagram with nodes and edges asynchronously.
 
     Args:
         schema: Dictionary containing diagram definition
@@ -78,8 +79,8 @@ def parse_diagram_schema(
     # Prepare the expected output path
     output_path = f"{attrs['filename']}.{attrs['outformat']}"
 
-    # Create the diagram with proper exception handling
-    try:
+    # Define the diagram creation function
+    def create_diagram():
         # Create the diagram
         with Diagram(diagram_name, **attrs):
             # Process clusters first to establish hierarchy
@@ -128,6 +129,14 @@ def parse_diagram_schema(
                 target = node_objects[target_id]
 
                 source >> target
+
+        return output_path
+
+    try:
+        # Run CPU-bound operation in a thread pool to avoid blocking the event loop
+        result = await asyncio.to_thread(create_diagram)
+        return result
+
     except Exception as e:
         # If diagram creation fails, clean up any partially created file
         if os.path.exists(output_path):
@@ -138,6 +147,3 @@ def parse_diagram_schema(
                 print(f"Failed to remove incomplete diagram file: {output_path}")
         # Re-raise the original exception
         raise
-
-    # Return the path to the generated diagram if successful
-    return output_path
