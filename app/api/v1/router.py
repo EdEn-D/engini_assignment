@@ -2,15 +2,16 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse
 import logging
 import os
-from app.schemas.diagram import DiagramRequest
+from app.schemas.diagram import DiagramRequest, AssistantRequest
 from app.agents.digram_generating_agent import DiagramGeneratingAgent
+from app.agents.assistant_agent import AssistantAgent
 from app.tools.generate_graph import parse_diagram_schema
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["diagram-generation"])
 diagram_agent = DiagramGeneratingAgent()
-
+assistant_agent = AssistantAgent()
 
 @router.post(
     "/generate-diagram",
@@ -35,7 +36,7 @@ async def generate_diagram(request: DiagramRequest):
     try:
         # Generate diagram structure
         diagram_dict = await diagram_agent.generate_diagram_structure(request.description)
-        logger.info(f"Generated diagram structure: {diagram_dict}")
+        # logger.info(f"Generated diagram structure: {diagram_dict}")
 
         # Generate the actual diagram image
         diagram_path = await parse_diagram_schema(diagram_dict, os.getenv("TEMP_DIR"))
@@ -74,3 +75,25 @@ async def generate_diagram(request: DiagramRequest):
         raise HTTPException(
             status_code=500, detail=f"Error generating diagram: {str(e)}"
         )
+
+@router.post("/assistant",
+    summary="Interactive diagram assistant",
+    # response_model=AssistantResponse,
+)
+async def assistant(request: AssistantRequest):
+    """
+    Interactive assistant for diagram generation help.
+
+    - **message**: User message
+    - **context**: Previous conversation context (optional)
+
+    Returns assistant response with text and/or diagram.
+    """
+    logger.info(f"Received assistant request: {request}")
+    try:
+        response = await assistant_agent.invoke_assistant(request)
+
+        return response
+    except Exception as e:
+        logger.error(f"Error in assistant: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error in assistant: {str(e)}")

@@ -11,16 +11,12 @@ from .prompts import diagram_generation_system_prompt
 
 load_dotenv(find_dotenv())
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+
 logger = logging.getLogger(__name__)
 
 
 class DiagramGenerationError(Exception):
     """Custom exception for diagram generation errors"""
-
     pass
 
 
@@ -28,7 +24,6 @@ class DiagramGeneratingAgent:
     """
     Agent responsible for generating diagrams based on text input using an LLM.
     """
-
     def __init__(self):
         llm = ChatOpenAI(model="gpt-4o", temperature=0)
         self.client = llm.with_structured_output(DiagramSchema)

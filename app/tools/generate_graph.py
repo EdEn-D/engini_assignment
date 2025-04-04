@@ -52,7 +52,7 @@ async def parse_diagram_schema(
 
     # Default diagram attributes
     attrs = {
-        "show": True,
+        "show": False,
         "direction": "LR",
         "outformat": "png",
         "filename": os.path.join(output_dir, diagram_name.replace(" ", "_").lower()),

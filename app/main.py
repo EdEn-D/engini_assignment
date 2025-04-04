@@ -20,8 +20,11 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Configuration
+# Configuration from environment variables
 TEMP_DIR = os.getenv("TEMP_DIR", "temp")
+API_HOST = os.getenv("API_HOST", "0.0.0.0")
+API_PORT = int(os.getenv("API_PORT", "8000"))
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -33,9 +36,9 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     except Exception as e:
         logger.error(f"Failed to create temp directory: {str(e)}", exc_info=True)
         raise
-    
+
     yield  # Application runs here
-    
+
     # Shutdown code
     logger.info(f"Server shutting down. Cleaning up temporary directory: {TEMP_DIR}")
     try:
@@ -88,12 +91,11 @@ async def health_check():
     )
 
 
-
-
 if __name__ == "__main__":
+    logger.info(f"Starting server on {API_HOST}:{API_PORT}")
     uvicorn.run(
         "app.main:app",
-        host=os.getenv("API_HOST", "0.0.0.0"),
-        port=int(os.getenv("API_PORT", 8000)),
+        host=API_HOST,
+        port=API_PORT,
         reload=True,
     )
