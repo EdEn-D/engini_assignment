@@ -84,14 +84,15 @@ async def parse_diagram_schema(
         # Create the diagram
         with Diagram(diagram_name, **attrs):
             # Process clusters first to establish hierarchy
-            for cluster_def in schema.get("clusters", []):
+            clusters = schema.get("clusters") or []
+            for cluster_def in clusters:
                 cluster_id = cluster_def["id"]
                 cluster_label = cluster_def.get("label", cluster_id)
                 cluster_objects[cluster_id] = Cluster(cluster_label)
 
             # Map nodes to their clusters
             node_to_cluster = {}
-            for cluster_def in schema.get("clusters", []):
+            for cluster_def in clusters:
                 cluster_id = cluster_def["id"]
                 for node_id in cluster_def.get("nodes", []):
                     node_to_cluster[node_id] = cluster_id
