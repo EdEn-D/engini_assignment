@@ -21,16 +21,25 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# API configuration from environment variables
-API_DOMAIN = os.getenv("API_DOMAIN", "localhost")
-API_PORT = os.getenv("API_PORT", "8000")
+# Debug environment variables
+logger.info("Debugging environment variables:")
+logger.info(f"API_DOMAIN: {os.getenv('API_DOMAIN')}")
+logger.info(f"API_PORT: {os.getenv('API_PORT')}")
+logger.info(f"API_BASE_URL env: {os.getenv('API_BASE_URL')}")
 
-# Construct the API base URL with hard-coded HTTP protocol
-API_BASE_URL = f"http://{API_DOMAIN}:{API_PORT}"
+# Use API_BASE_URL directly from environment
+# API_BASE_URL = os.getenv("API_BASE_URL", "http://backend:8000")
+# Construct API endpoints
+API_DOMAIN = os.getenv("API_DOMAIN", "backend")
+API_PORT = os.getenv("API_PORT", "8000")
+API_BASE_URL = os.getenv("API_BASE_URL", f"http://{API_DOMAIN}:{API_PORT}")
+
 API_ASSISTANT_ENDPOINT = f"{API_BASE_URL}/api/v1/assistant"
 API_DIAGRAM_ENDPOINT = f"{API_BASE_URL}/api/v1/generate-diagram"
 
-logger.info(f"API Base URL constructed as: {API_BASE_URL}")
+logger.info(f"Final API Base URL: {API_BASE_URL}")
+logger.info(f"Final API Assistant Endpoint: {API_ASSISTANT_ENDPOINT}")
+logger.info(f"Final API Diagram Endpoint: {API_DIAGRAM_ENDPOINT}")
 
 
 def process_messages(message_list):

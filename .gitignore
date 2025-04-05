@@ -129,7 +129,9 @@ celerybeat.pid
 
 # Environments
 .env
-.venv
+.venv/
+venv/
+ENV/
 env/
 venv/
 ENV/
@@ -173,3 +175,38 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 *.pdf
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Environment variables
+.env
+
+# Temporary files
+temp/
+.DS_Store
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# UV package management
+.uv/
