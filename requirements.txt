@@ -2,5 +2,7 @@ diagrams
 uvicorn
 fastapi
 python-dotenv
+langchain
 langchain_openai
 streamlit
+pydantic

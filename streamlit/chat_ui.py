@@ -1,13 +1,8 @@
 import streamlit as st
 from dotenv import load_dotenv
-import os
-import shelve
 import argparse
-import sys
-from pathlib import Path
 import logging
 from client import generate_response
-import base64
 from io import BytesIO
 
 load_dotenv()

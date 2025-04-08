@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3.12-slim
 
 WORKDIR /app
 
@@ -6,17 +6,15 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     graphviz \
     curl \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements and install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy toml file and install dependencies
+COPY pyproject.toml .
+RUN pip install --no-cache-dir ".[backend]"
 
 # Copy application code
-COPY . .
-
-# Create necessary directories
-RUN mkdir -p /app/temp
+COPY ./app ./app
 
 # Expose port
 EXPOSE 8000

@@ -3,10 +3,8 @@ import requests
 import logging
 import sys
 from dotenv import load_dotenv
-import json
 from io import BytesIO
 import ast
-import base64
 
 # Load environment variables
 load_dotenv()

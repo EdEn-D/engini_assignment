@@ -1,13 +1,13 @@
-FROM python:3.10-slim
+FROM python:3.12-slim
 
 WORKDIR /app
 
 # Copy requirements and install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY pyproject.toml .
+RUN pip install --no-cache-dir ".[frontend]"
 
 # Copy application code
-COPY . .
+COPY ./streamlit ./streamlit
 
 # Expose port
 EXPOSE 8501
